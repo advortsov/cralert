@@ -1,0 +1,13 @@
+<resources>
+    <color name="cralert_primary">#1F2330</color>
+    <color name="cralert_primary_variant">#161926</color>
+    <color name="cralert_secondary">#FFB86B</color>
+
+    <color name="cralert_background">#12141B</color>
+    <color name="cralert_surface">#1B1F29</color>
+
+    <color name="cralert_on_primary">#FFFFFF</color>
+    <color name="cralert_on_secondary">#1B1E27</color>
+    <color name="cralert_on_background">#E4E7EE</color>
+    <color name="cralert_on_surface">#E4E7EE</color>
+</resources>

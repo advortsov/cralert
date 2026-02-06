@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">CRAlert</string>
+    <string name="title_alerts">Alerts</string>
+    <string name="title_add_alert">Add Alert</string>
+    <string name="action_add">Add</string>
+    <string name="action_save">Save</string>
+    <string name="label_asset">Asset</string>
+    <string name="label_base_asset">Base asset</string>
+    <string name="label_quote_asset">Quote asset</string>
+    <string name="label_price">Target price</string>
+    <string name="label_condition">Condition</string>
+    <string name="condition_above">Above</string>
+    <string name="condition_below">Below</string>
+    <string name="empty_alerts">No alerts yet</string>
+    <string name="cached">Cached data</string>
+    <string name="refresh">Refresh</string>
+    <string name="search_assets">Search assets</string>
+    <string name="notification_channel">Price alerts</string>
+    <string name="notification_service">Price check running</string>
+    <string name="notification_service_desc">Checking prices every 15 minutes</string>
+    <string name="notification_trigger">Price alert triggered</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_test_notification">Test notification</string>
+    <string name="title_settings">Settings</string>
+    <string name="label_api_base_url">API base URL</string>
+    <string name="label_api_token">API token</string>
+    <string name="label_icon_base_url">Icon base URL</string>
+    <string name="label_assets_limit">Assets limit</string>
+    <string name="label_cache_ttl_hours">Cache TTL (hours)</string>
+    <string name="label_check_interval_minutes">Check interval (minutes)</string>
+    <string name="label_min_trigger_minutes">Min trigger interval (minutes)</string>
+    <string name="label_connect_timeout">Connect timeout (ms)</string>
+    <string name="label_read_timeout">Read timeout (ms)</string>
+    <string name="label_dark_mode">Dark mode</string>
+</resources>

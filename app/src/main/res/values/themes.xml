@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.CRAlert" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/cralert_primary</item>
+        <item name="colorPrimaryVariant">@color/cralert_primary_variant</item>
+        <item name="colorSecondary">@color/cralert_secondary</item>
+        <item name="colorOnPrimary">@color/cralert_on_primary</item>
+        <item name="colorOnSecondary">@color/cralert_on_secondary</item>
+        <item name="colorOnBackground">@color/cralert_on_background</item>
+        <item name="colorOnSurface">@color/cralert_on_surface</item>
+        <item name="android:colorBackground">@color/cralert_background</item>
+        <item name="colorSurface">@color/cralert_surface</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/cralert_primary_variant</item>
+    </style>
+</resources>
