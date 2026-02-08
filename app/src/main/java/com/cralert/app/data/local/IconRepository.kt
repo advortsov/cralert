@@ -40,8 +40,8 @@ class IconRepository(
         val url = URL("$baseUrl/${symbol.lowercase()}@2x.png")
         val connection = (url.openConnection() as HttpURLConnection).apply {
             requestMethod = "GET"
-            connectTimeout = 5000
-            readTimeout = 8000
+            connectTimeout = settings.getConnectTimeoutMs()
+            readTimeout = settings.getReadTimeoutMs()
         }
 
         return try {
@@ -60,16 +60,27 @@ class IconRepository(
     }
 
     private fun saveToCache(assetId: String, file: File) {
-        val map = getIndex().apply { put(assetId, file.name) }
-        val json = JSONObject()
-        map.forEach { (key, value) -> json.put(key, value) }
-        prefs.edit().putString(KEY_INDEX, json.toString()).apply()
+        val index = getIndex().apply { put(assetId, file.name) }
+        val timestamps = getTimestampIndex().apply { put(assetId, System.currentTimeMillis()) }
+        persistIndex(index, timestamps)
     }
 
     private fun getCachedFile(assetId: String): File? {
         val index = getIndex()
+        val timestamps = getTimestampIndex()
         val name = index[assetId] ?: return null
-        return File(context.cacheDir, name)
+        val file = File(context.cacheDir, name)
+        val timestamp = timestamps[assetId] ?: 0L
+        if (!file.exists() || isExpired(timestamp)) {
+            if (file.exists()) {
+                file.delete()
+            }
+            index.remove(assetId)
+            timestamps.remove(assetId)
+            persistIndex(index, timestamps)
+            return null
+        }
+        return file
     }
 
     private fun getIndex(): MutableMap<String, String> {
@@ -82,7 +93,36 @@ class IconRepository(
         return map
     }
 
+    private fun getTimestampIndex(): MutableMap<String, Long> {
+        val raw = prefs.getString(KEY_INDEX_TS, null) ?: return mutableMapOf()
+        val json = JSONObject(raw)
+        val map = mutableMapOf<String, Long>()
+        json.keys().forEach { key ->
+            map[key] = json.optLong(key, 0L)
+        }
+        return map
+    }
+
+    private fun persistIndex(index: Map<String, String>, timestamps: Map<String, Long>) {
+        val indexJson = JSONObject()
+        index.forEach { (key, value) -> indexJson.put(key, value) }
+        val tsJson = JSONObject()
+        timestamps.forEach { (key, value) -> tsJson.put(key, value) }
+        prefs.edit()
+            .putString(KEY_INDEX, indexJson.toString())
+            .putString(KEY_INDEX_TS, tsJson.toString())
+            .apply()
+    }
+
+    private fun isExpired(timestamp: Long): Boolean {
+        val ttlMs = settings.getIconCacheTtlMs()
+        if (ttlMs <= 0L) return true
+        if (timestamp <= 0L) return true
+        return System.currentTimeMillis() - timestamp > ttlMs
+    }
+
     private companion object {
         private const val KEY_INDEX = "icons_cache_index"
+        private const val KEY_INDEX_TS = "icons_cache_timestamp"
     }
 }

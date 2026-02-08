@@ -11,7 +11,8 @@ data class Alert(
     val targetPrice: Double,
     val condition: Condition,
     val enabled: Boolean,
-    val lastTriggeredAt: Long?
+    val lastTriggeredAt: Long?,
+    val lastPrice: Double?
 )
 
 data class Asset(

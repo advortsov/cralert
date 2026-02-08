@@ -21,7 +21,8 @@ class AlertJsonAdapterTest {
             targetPrice = 123.45,
             condition = Condition.ABOVE,
             enabled = true,
-            lastTriggeredAt = 1000L
+            lastTriggeredAt = 1000L,
+            lastPrice = 120.0
         )
 
         val json = AlertJsonAdapter.toJson(alert)

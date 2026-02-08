@@ -43,7 +43,10 @@ class AddAlertViewModel(
             )
             _assets.value = result.assets
             _loading.value = false
-            _error.value = if (result.assets.isEmpty()) "No assets available" else null
+            _error.value = when {
+                !result.success && !result.error.isNullOrBlank() -> buildErrorMessage(result.httpCode, result.error)
+                else -> null
+            }
         }
     }
 
@@ -69,8 +72,19 @@ class AddAlertViewModel(
             targetPrice = targetPrice,
             condition = condition,
             enabled = true,
-            lastTriggeredAt = null
+            lastTriggeredAt = null,
+            lastPrice = null
         )
         alertRepository.saveAlert(alert)
+    }
+
+    private fun buildErrorMessage(httpCode: Int?, error: String?): String {
+        val codePart = httpCode?.let { "HTTP $it" } ?: "HTTP error"
+        val messagePart = error?.take(120).orEmpty()
+        return if (messagePart.isNotBlank()) {
+            "$codePart: $messagePart"
+        } else {
+            codePart
+        }
     }
 }

@@ -20,6 +20,9 @@ object AlertJsonAdapter {
         if (alert.lastTriggeredAt != null) {
             json.put("lastTriggeredAt", alert.lastTriggeredAt)
         }
+        if (alert.lastPrice != null) {
+            json.put("lastPrice", alert.lastPrice)
+        }
         return json
     }
 
@@ -35,7 +38,8 @@ object AlertJsonAdapter {
             targetPrice = json.getDouble("targetPrice"),
             condition = Condition.valueOf(json.getString("condition")),
             enabled = json.optBoolean("enabled", true),
-            lastTriggeredAt = if (json.has("lastTriggeredAt")) json.getLong("lastTriggeredAt") else null
+            lastTriggeredAt = if (json.has("lastTriggeredAt")) json.getLong("lastTriggeredAt") else null,
+            lastPrice = if (json.has("lastPrice")) json.getDouble("lastPrice") else null
         )
     }
 }

@@ -1,13 +1,24 @@
 <resources>
-    <color name="cralert_primary">#1F2330</color>
-    <color name="cralert_primary_variant">#161926</color>
-    <color name="cralert_secondary">#FFB86B</color>
+    <color name="cralert_primary">#C7C4FF</color>
+    <color name="cralert_on_primary">#2A2895</color>
+    <color name="cralert_primary_container">#3C39B2</color>
+    <color name="cralert_on_primary_container">#E0E3FF</color>
 
-    <color name="cralert_background">#12141B</color>
-    <color name="cralert_surface">#1B1F29</color>
+    <color name="cralert_secondary">#7DD3FC</color>
+    <color name="cralert_on_secondary">#00344F</color>
+    <color name="cralert_secondary_container">#1A4F6E</color>
+    <color name="cralert_on_secondary_container">#CFE9FF</color>
 
-    <color name="cralert_on_primary">#FFFFFF</color>
-    <color name="cralert_on_secondary">#1B1E27</color>
+    <color name="cralert_tertiary">#FBBF24</color>
+    <color name="cralert_on_tertiary">#3B2500</color>
+    <color name="cralert_tertiary_container">#5B3A00</color>
+    <color name="cralert_on_tertiary_container">#FFE1B3</color>
+
+    <color name="cralert_background">#11131A</color>
     <color name="cralert_on_background">#E4E7EE</color>
+    <color name="cralert_surface">#171923</color>
     <color name="cralert_on_surface">#E4E7EE</color>
+    <color name="cralert_surface_variant">#252A38</color>
+    <color name="cralert_on_surface_variant">#C8CEE0</color>
+    <color name="cralert_outline">#8C95AD</color>
 </resources>
