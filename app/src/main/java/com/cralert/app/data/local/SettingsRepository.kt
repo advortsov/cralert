@@ -99,6 +99,75 @@ class SettingsRepository(private val prefs: SharedPreferences) {
         prefs.edit().putLong(KEY_RETRY_MAX_DELAY_MS, value).apply()
     }
 
+    fun getHistoryCacheTtlHours(): Long = prefs.getLong(
+        KEY_HISTORY_CACHE_TTL_HOURS,
+        SettingsDefaults.HISTORY_CACHE_TTL_HOURS
+    )
+
+    fun setHistoryCacheTtlHours(value: Long) {
+        prefs.edit().putLong(KEY_HISTORY_CACHE_TTL_HOURS, value).apply()
+    }
+
+    fun getHistoryCacheTtlMs(): Long = getHistoryCacheTtlHours() * 60 * 60 * 1000L
+
+    fun getCryptoCompareBaseUrl(): String = prefs.getString(
+        KEY_CRYPTOCOMPARE_BASE_URL,
+        SettingsDefaults.CRYPTOCOMPARE_BASE_URL
+    ) ?: SettingsDefaults.CRYPTOCOMPARE_BASE_URL
+
+    fun setCryptoCompareBaseUrl(value: String) {
+        prefs.edit().putString(KEY_CRYPTOCOMPARE_BASE_URL, value.trim()).apply()
+    }
+
+    fun getCryptoCompareApiKey(): String = prefs.getString(
+        KEY_CRYPTOCOMPARE_API_KEY,
+        SettingsDefaults.CRYPTOCOMPARE_API_KEY
+    )?.takeIf { it.isNotBlank() }
+        ?: BuildConfig.CRYPTOCOMPARE_API_KEY
+
+    fun setCryptoCompareApiKey(value: String) {
+        prefs.edit().putString(KEY_CRYPTOCOMPARE_API_KEY, value.trim()).apply()
+    }
+
+    fun isEmailEnabled(): Boolean = prefs.getBoolean(KEY_EMAIL_ENABLED, SettingsDefaults.EMAIL_ENABLED)
+
+    fun setEmailEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_EMAIL_ENABLED, enabled).apply()
+    }
+
+    fun getResendBaseUrl(): String = prefs.getString(
+        KEY_RESEND_BASE_URL,
+        SettingsDefaults.RESEND_BASE_URL
+    ) ?: SettingsDefaults.RESEND_BASE_URL
+
+    fun setResendBaseUrl(value: String) {
+        prefs.edit().putString(KEY_RESEND_BASE_URL, value.trim()).apply()
+    }
+
+    fun getResendApiKey(): String = prefs.getString(
+        KEY_RESEND_API_KEY,
+        SettingsDefaults.RESEND_API_KEY
+    )?.takeIf { it.isNotBlank() }
+        ?: BuildConfig.RESEND_API_KEY
+
+    fun setResendApiKey(value: String) {
+        prefs.edit().putString(KEY_RESEND_API_KEY, value.trim()).apply()
+    }
+
+    fun getEmailFrom(): String = prefs.getString(KEY_EMAIL_FROM, SettingsDefaults.EMAIL_FROM)
+        ?: SettingsDefaults.EMAIL_FROM
+
+    fun setEmailFrom(value: String) {
+        prefs.edit().putString(KEY_EMAIL_FROM, value.trim()).apply()
+    }
+
+    fun getEmailTo(): String = prefs.getString(KEY_EMAIL_TO, SettingsDefaults.EMAIL_TO)
+        ?: SettingsDefaults.EMAIL_TO
+
+    fun setEmailTo(value: String) {
+        prefs.edit().putString(KEY_EMAIL_TO, value.trim()).apply()
+    }
+
     companion object {
         const val PREFS_NAME = "alerts_prefs"
 
@@ -115,6 +184,14 @@ class SettingsRepository(private val prefs: SharedPreferences) {
         private const val KEY_RETRY_ATTEMPTS = "settings_retry_attempts"
         private const val KEY_RETRY_BASE_DELAY_MS = "settings_retry_base_delay_ms"
         private const val KEY_RETRY_MAX_DELAY_MS = "settings_retry_max_delay_ms"
+        private const val KEY_HISTORY_CACHE_TTL_HOURS = "settings_history_cache_ttl_hours"
+        private const val KEY_CRYPTOCOMPARE_BASE_URL = "settings_cryptocompare_base_url"
+        private const val KEY_CRYPTOCOMPARE_API_KEY = "settings_cryptocompare_api_key"
+        private const val KEY_RESEND_BASE_URL = "settings_resend_base_url"
+        private const val KEY_RESEND_API_KEY = "settings_resend_api_key"
+        private const val KEY_EMAIL_ENABLED = "settings_email_enabled"
+        private const val KEY_EMAIL_FROM = "settings_email_from"
+        private const val KEY_EMAIL_TO = "settings_email_to"
 
         fun create(context: Context): SettingsRepository {
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.cralert.app.di.ServiceLocator
 import com.cralert.app.ui.add.AddAlertActivity
+import com.cralert.app.ui.details.AssetDetailsActivity
 import com.cralert.app.ui.settings.SettingsActivity
 import com.cralert.app.ui.theme.CRAlertTheme
 import com.cralert.app.worker.NotificationHelper
@@ -35,7 +36,20 @@ class MainActivity : AppCompatActivity() {
                     viewModel = viewModel,
                     onAddAlert = { startActivity(Intent(this, AddAlertActivity::class.java)) },
                     onOpenSettings = { startActivity(Intent(this, SettingsActivity::class.java)) },
-                    onTestNotification = { NotificationHelper.sendTest(this) }
+                    onTestNotification = { NotificationHelper.sendTest(this) },
+                    onOpenDetails = { alert ->
+                        startActivity(
+                            AssetDetailsActivity.createIntent(
+                                this,
+                                baseId = alert.assetId,
+                                baseSymbol = alert.symbol,
+                                baseName = alert.name,
+                                quoteId = alert.quoteAssetId,
+                                quoteSymbol = alert.quoteSymbol,
+                                quoteName = alert.quoteName
+                            )
+                        )
+                    }
                 )
             }
         }

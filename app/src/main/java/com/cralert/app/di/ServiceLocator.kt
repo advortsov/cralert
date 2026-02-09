@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.cralert.app.data.AlertCheckEngine
 import com.cralert.app.data.AlertRepository
+import com.cralert.app.data.HistoryRepository
 import com.cralert.app.data.MarketRepository
 import com.cralert.app.data.local.DiagnosticsRepository
 import com.cralert.app.data.local.IconRepository
@@ -12,6 +13,7 @@ import com.cralert.app.data.local.SettingsRepository
 import com.cralert.app.data.local.SharedPreferencesAlertRepository
 import com.cralert.app.data.remote.CoinCapRestProvider
 import com.cralert.app.data.remote.QuotesRestProvider
+import com.cralert.app.worker.EmailNotifier
 
 object ServiceLocator {
     lateinit var appContext: Context
@@ -44,7 +46,15 @@ object ServiceLocator {
     }
 
     val alertCheckEngine: AlertCheckEngine by lazy {
-        AlertCheckEngine(alertRepository)
+        AlertCheckEngine(alertRepository, emailNotifier)
+    }
+
+    val historyRepository: HistoryRepository by lazy {
+        HistoryRepository(appContext, settingsRepository)
+    }
+
+    val emailNotifier: EmailNotifier by lazy {
+        EmailNotifier(settingsRepository)
     }
 
     fun init(context: Context) {

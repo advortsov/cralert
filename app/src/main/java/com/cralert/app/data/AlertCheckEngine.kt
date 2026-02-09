@@ -2,6 +2,7 @@ package com.cralert.app.data
 
 import android.content.Context
 import android.util.Log
+import com.cralert.app.worker.EmailNotifier
 import com.cralert.app.worker.NotificationHelper
 
 data class AlertCheckStats(
@@ -11,7 +12,8 @@ data class AlertCheckStats(
 )
 
 class AlertCheckEngine(
-    private val alertRepository: AlertRepository
+    private val alertRepository: AlertRepository,
+    private val emailNotifier: EmailNotifier
 ) {
     fun evaluate(
         context: Context,
@@ -39,6 +41,12 @@ class AlertCheckEngine(
             )
             if (shouldTrigger) {
                 NotificationHelper.sendAlert(
+                    context,
+                    alert,
+                    price,
+                    pricesUpdatedAt
+                )
+                emailNotifier.sendAlertAsync(
                     context,
                     alert,
                     price,

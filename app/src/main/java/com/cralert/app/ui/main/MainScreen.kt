@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.clickable
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -68,7 +69,8 @@ fun MainScreen(
     viewModel: MainViewModel,
     onAddAlert: () -> Unit,
     onOpenSettings: () -> Unit,
-    onTestNotification: () -> Unit
+    onTestNotification: () -> Unit,
+    onOpenDetails: (Alert) -> Unit
 ) {
     val alerts by viewModel.alerts.observeAsState(emptyList())
     val cached by viewModel.cached.observeAsState(false)
@@ -158,7 +160,8 @@ fun MainScreen(
                         SwipeToDeleteRow(
                             model = model,
                             onToggle = { alert, enabled -> viewModel.toggleAlert(alert, enabled) },
-                            onDelete = { alert -> viewModel.deleteAlert(alert) }
+                            onDelete = { alert -> viewModel.deleteAlert(alert) },
+                            onOpenDetails = onOpenDetails
                         )
                         HorizontalDivider(
                             color = MaterialTheme.colorScheme.outline,
@@ -183,7 +186,8 @@ fun MainScreen(
 private fun AlertRow(
     model: AlertUiModel,
     onToggle: (Alert, Boolean) -> Unit,
-    onDelete: (Alert) -> Unit
+    onDelete: (Alert) -> Unit,
+    onOpenDetails: (Alert) -> Unit
 ) {
     val alert = model.alert
     val conditionText = if (alert.condition == Condition.ABOVE) {
@@ -200,7 +204,9 @@ private fun AlertRow(
 
     Surface(color = MaterialTheme.colorScheme.surface) {
         ListItem(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onOpenDetails(alert) },
             colors = ListItemDefaults.colors(
                 containerColor = MaterialTheme.colorScheme.surface
             ),
@@ -265,7 +271,8 @@ private fun AlertRow(
 private fun SwipeToDeleteRow(
     model: AlertUiModel,
     onToggle: (Alert, Boolean) -> Unit,
-    onDelete: (Alert) -> Unit
+    onDelete: (Alert) -> Unit,
+    onOpenDetails: (Alert) -> Unit
 ) {
     val dismissState = rememberDismissState(
         confirmStateChange = { value ->
@@ -313,7 +320,8 @@ private fun SwipeToDeleteRow(
             AlertRow(
                 model = model,
                 onToggle = onToggle,
-                onDelete = onDelete
+                onDelete = onDelete,
+                onOpenDetails = onOpenDetails
             )
         }
     )

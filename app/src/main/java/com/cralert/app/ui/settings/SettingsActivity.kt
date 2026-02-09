@@ -18,6 +18,8 @@ class SettingsActivity : AppCompatActivity() {
                 SettingsScreen(
                     settingsRepository = ServiceLocator.settingsRepository,
                     onBack = { finish() },
+                    onOpenBatterySettings = { SettingsIntents.requestIgnoreBatteryOptimizations(this) },
+                    onOpenNotificationSettings = { SettingsIntents.openNotificationSettings(this) },
                     onSaved = { darkMode ->
                         AppCompatDelegate.setDefaultNightMode(
                             if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO

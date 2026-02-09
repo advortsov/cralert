@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.cralert.app.R
 import com.cralert.app.data.local.SettingsDefaults
@@ -47,6 +48,8 @@ import java.time.format.DateTimeFormatter
 fun SettingsScreen(
     settingsRepository: SettingsRepository,
     onBack: () -> Unit,
+    onOpenBatterySettings: () -> Unit,
+    onOpenNotificationSettings: () -> Unit,
     onSaved: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
@@ -57,6 +60,7 @@ fun SettingsScreen(
     var iconCacheTtlDays by rememberSaveable { mutableStateOf(settingsRepository.getIconCacheTtlDays().toString()) }
     var assetsLimit by rememberSaveable { mutableStateOf(settingsRepository.getAssetsLimit().toString()) }
     var cacheTtlHours by rememberSaveable { mutableStateOf(settingsRepository.getCacheTtlHours().toString()) }
+    var historyCacheTtlHours by rememberSaveable { mutableStateOf(settingsRepository.getHistoryCacheTtlHours().toString()) }
     var checkIntervalMinutes by rememberSaveable { mutableStateOf(settingsRepository.getCheckIntervalMinutes().toString()) }
     var connectTimeoutMs by rememberSaveable { mutableStateOf(settingsRepository.getConnectTimeoutMs().toString()) }
     var readTimeoutMs by rememberSaveable { mutableStateOf(settingsRepository.getReadTimeoutMs().toString()) }
@@ -64,6 +68,13 @@ fun SettingsScreen(
     var retryAttempts by rememberSaveable { mutableStateOf(settingsRepository.getRetryAttempts().toString()) }
     var retryBaseDelayMs by rememberSaveable { mutableStateOf(settingsRepository.getRetryBaseDelayMs().toString()) }
     var retryMaxDelayMs by rememberSaveable { mutableStateOf(settingsRepository.getRetryMaxDelayMs().toString()) }
+    var cryptoCompareBaseUrl by rememberSaveable { mutableStateOf(settingsRepository.getCryptoCompareBaseUrl()) }
+    var cryptoCompareApiKey by rememberSaveable { mutableStateOf(settingsRepository.getCryptoCompareApiKey()) }
+    var emailEnabled by rememberSaveable { mutableStateOf(settingsRepository.isEmailEnabled()) }
+    var resendBaseUrl by rememberSaveable { mutableStateOf(settingsRepository.getResendBaseUrl()) }
+    var resendApiKey by rememberSaveable { mutableStateOf(settingsRepository.getResendApiKey()) }
+    var emailFrom by rememberSaveable { mutableStateOf(settingsRepository.getEmailFrom()) }
+    var emailTo by rememberSaveable { mutableStateOf(settingsRepository.getEmailTo()) }
     var diagnosticsState by remember { mutableStateOf(diagnosticsRepository.getState()) }
 
     Scaffold(
@@ -88,6 +99,9 @@ fun SettingsScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            item {
+                SectionHeader(title = stringResource(R.string.section_api))
+            }
             item {
                 OutlinedTextField(
                     value = apiBaseUrl,
@@ -131,6 +145,9 @@ fun SettingsScreen(
                 )
             }
             item {
+                SectionHeader(title = stringResource(R.string.section_cache))
+            }
+            item {
                 OutlinedTextField(
                     value = cacheTtlHours,
                     onValueChange = { cacheTtlHours = it },
@@ -141,12 +158,96 @@ fun SettingsScreen(
             }
             item {
                 OutlinedTextField(
+                    value = historyCacheTtlHours,
+                    onValueChange = { historyCacheTtlHours = it },
+                    label = { Text(text = stringResource(R.string.label_history_cache_ttl_hours)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+            }
+            item {
+                SectionHeader(title = stringResource(R.string.section_background))
+            }
+            item {
+                OutlinedTextField(
                     value = checkIntervalMinutes,
                     onValueChange = { checkIntervalMinutes = it },
                     label = { Text(text = stringResource(R.string.label_check_interval_minutes)) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
+            }
+            item {
+                OutlinedTextField(
+                    value = cryptoCompareBaseUrl,
+                    onValueChange = { cryptoCompareBaseUrl = it },
+                    label = { Text(text = stringResource(R.string.label_cryptocompare_base_url)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            item {
+                OutlinedTextField(
+                    value = cryptoCompareApiKey,
+                    onValueChange = { cryptoCompareApiKey = it },
+                    label = { Text(text = stringResource(R.string.label_cryptocompare_api_key)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    visualTransformation = PasswordVisualTransformation()
+                )
+            }
+            item {
+                SectionHeader(title = stringResource(R.string.section_notifications))
+            }
+            item {
+                Column {
+                    Text(text = stringResource(R.string.label_email_notifications), style = MaterialTheme.typography.titleSmall)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    RowSwitch(
+                        title = stringResource(R.string.label_email_enabled),
+                        checked = emailEnabled,
+                        onCheckedChange = {
+                            emailEnabled = it
+                            settingsRepository.setEmailEnabled(it)
+                        }
+                    )
+                }
+            }
+            item {
+                OutlinedTextField(
+                    value = resendBaseUrl,
+                    onValueChange = { resendBaseUrl = it },
+                    label = { Text(text = stringResource(R.string.label_resend_base_url)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            item {
+                OutlinedTextField(
+                    value = resendApiKey,
+                    onValueChange = { resendApiKey = it },
+                    label = { Text(text = stringResource(R.string.label_resend_api_key)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    visualTransformation = PasswordVisualTransformation()
+                )
+            }
+            item {
+                OutlinedTextField(
+                    value = emailFrom,
+                    onValueChange = { emailFrom = it },
+                    label = { Text(text = stringResource(R.string.label_email_from)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                )
+            }
+            item {
+                OutlinedTextField(
+                    value = emailTo,
+                    onValueChange = { emailTo = it },
+                    label = { Text(text = stringResource(R.string.label_email_to)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                )
+            }
+            item {
+                SectionHeader(title = stringResource(R.string.section_network))
             }
             item {
                 OutlinedTextField(
@@ -194,6 +295,9 @@ fun SettingsScreen(
                 )
             }
             item {
+                SectionHeader(title = stringResource(R.string.section_theme))
+            }
+            item {
                 Column {
                     Text(text = stringResource(R.string.label_theme), style = MaterialTheme.typography.titleSmall)
                     Spacer(modifier = Modifier.height(6.dp))
@@ -205,12 +309,17 @@ fun SettingsScreen(
                 }
             }
             item {
+                SectionHeader(title = stringResource(R.string.section_actions))
+            }
+            item {
                 Button(
                     onClick = {
                         val assetsLimitValue = assetsLimit.toIntOrNull() ?: SettingsDefaults.ASSETS_LIMIT
                         val iconCacheTtlValue = iconCacheTtlDays.toLongOrNull()
                             ?: SettingsDefaults.ICON_CACHE_TTL_DAYS
                         val cacheTtlValue = cacheTtlHours.toLongOrNull() ?: SettingsDefaults.CACHE_TTL_HOURS
+                        val historyCacheTtlValue = historyCacheTtlHours.toLongOrNull()
+                            ?: SettingsDefaults.HISTORY_CACHE_TTL_HOURS
                         val checkIntervalValue = checkIntervalMinutes.toLongOrNull()
                             ?: SettingsDefaults.CHECK_INTERVAL_MINUTES
                         val connectTimeoutValue = connectTimeoutMs.toIntOrNull() ?: SettingsDefaults.CONNECT_TIMEOUT_MS
@@ -229,7 +338,19 @@ fun SettingsScreen(
                         settingsRepository.setIconCacheTtlDays(iconCacheTtlValue)
                         settingsRepository.setAssetsLimit(assetsLimitValue)
                         settingsRepository.setCacheTtlHours(cacheTtlValue)
+                        settingsRepository.setHistoryCacheTtlHours(historyCacheTtlValue)
                         settingsRepository.setCheckIntervalMinutes(checkIntervalValue)
+                        settingsRepository.setCryptoCompareBaseUrl(
+                            cryptoCompareBaseUrl.trim().ifBlank { SettingsDefaults.CRYPTOCOMPARE_BASE_URL }
+                        )
+                        settingsRepository.setCryptoCompareApiKey(cryptoCompareApiKey.trim())
+                        settingsRepository.setEmailEnabled(emailEnabled)
+                        settingsRepository.setResendBaseUrl(
+                            resendBaseUrl.trim().ifBlank { SettingsDefaults.RESEND_BASE_URL }
+                        )
+                        settingsRepository.setResendApiKey(resendApiKey.trim())
+                        settingsRepository.setEmailFrom(emailFrom.trim())
+                        settingsRepository.setEmailTo(emailTo.trim())
                         settingsRepository.setConnectTimeoutMs(connectTimeoutValue)
                         settingsRepository.setReadTimeoutMs(readTimeoutValue)
                         settingsRepository.setDarkModeEnabled(darkMode)
@@ -245,10 +366,32 @@ fun SettingsScreen(
                 }
             }
             item {
+                SectionHeader(title = stringResource(R.string.section_system))
+            }
+            item {
+                Column {
+                    Text(text = stringResource(R.string.label_system_settings), style = MaterialTheme.typography.titleSmall)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Button(
+                        onClick = onOpenBatterySettings,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.action_allow_background))
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(
+                        onClick = onOpenNotificationSettings,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.action_open_notifications))
+                    }
+                }
+            }
+            item {
                 Spacer(modifier = Modifier.height(8.dp))
             }
             item {
-                Text(text = stringResource(R.string.label_diagnostics), style = MaterialTheme.typography.titleMedium)
+                SectionHeader(title = stringResource(R.string.section_diagnostics))
             }
             item {
                 DiagnosticsRow(
@@ -343,6 +486,11 @@ fun SettingsScreen(
             }
         }
     }
+}
+
+@Composable
+private fun SectionHeader(title: String) {
+    Text(text = title, style = MaterialTheme.typography.titleMedium)
 }
 
 @Composable

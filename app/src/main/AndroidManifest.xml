@@ -26,6 +26,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.details.AssetDetailsActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>

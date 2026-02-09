@@ -21,6 +21,8 @@ android {
     val keystorePassword = localProps.getProperty("cralert.storePassword") ?: ""
     val keyAliasValue = localProps.getProperty("cralert.keyAlias") ?: ""
     val keyPasswordValue = localProps.getProperty("cralert.keyPassword") ?: ""
+    val cryptoCompareKey = localProps.getProperty("cralert.cryptoCompareApiKey") ?: ""
+    val resendApiKey = localProps.getProperty("cralert.resendApiKey") ?: ""
 
     defaultConfig {
         applicationId = "com.cralert.app"
@@ -31,6 +33,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "COINCAP_TOKEN", "\"$coinCapToken\"")
+        buildConfigField("String", "CRYPTOCOMPARE_API_KEY", "\"$cryptoCompareKey\"")
+        buildConfigField("String", "RESEND_API_KEY", "\"$resendApiKey\"")
     }
 
     signingConfigs {

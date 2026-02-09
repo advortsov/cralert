@@ -16,4 +16,12 @@ object SettingsDefaults {
     const val RETRY_ATTEMPTS = 3
     const val RETRY_BASE_DELAY_MS = 500L
     const val RETRY_MAX_DELAY_MS = 1500L
+    const val HISTORY_CACHE_TTL_HOURS = 24L
+    const val CRYPTOCOMPARE_BASE_URL = "https://min-api.cryptocompare.com/data/v2"
+    const val CRYPTOCOMPARE_API_KEY = ""
+    const val RESEND_BASE_URL = "https://api.resend.com"
+    const val RESEND_API_KEY = ""
+    const val EMAIL_ENABLED = false
+    const val EMAIL_FROM = ""
+    const val EMAIL_TO = ""
 }
